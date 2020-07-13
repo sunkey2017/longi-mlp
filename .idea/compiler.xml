@@ -6,8 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="longi-api-test" />
         <module name="longi-common-codegen" />
         <module name="longi-common-core" />
+        <module name="longi-gateway" />
+        <module name="longi-mmc-service" />
+        <module name="longi-service-test" />
       </profile>
     </annotationProcessing>
   </component>

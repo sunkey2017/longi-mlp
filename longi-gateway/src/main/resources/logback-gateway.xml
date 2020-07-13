@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" debug="false" scanPeriod="60 seconds">
+    <springProperty name="SERVICE_NAME" source="spring.application.name" defaultValue="aiSquare"/>
+    <springProperty scope="context" name="LOG_HOME" source="logging.path"/>
+    <springProperty scope="context" name="LOG_LEVEL_ROOT" source="mlp.log.level.root"/>
+    <springProperty scope="context" name="LOG_LEVEL" source="mlp.log.level.ai"/>
+
+    <springProperty scope="context" name="DB_DRIVER" source="spring.datasource.druid.driver-class-name"/>
+    <springProperty scope="context" name="DB_USER" source="spring.datasource.druid.username"/>
+    <springProperty scope="context" name="DB_PASS" source="spring.datasource.druid.password"/>
+    <springProperty scope="context" name="DB_URL" source="spring.datasource.druid.url"/>
+
+    <property name="LOG_PARAM_PATTERN" value="[%X{traceId}] [%X{serviceId}] [%X{clientId}] [%X{userId}]"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--默认控制台输出-->
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <!--默认文件输出-->
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>
+            ${LOG_HOME}/${SERVICE_NAME}/${SERVICE_NAME}.log
+        </file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${SERVICE_NAME}/${SERVICE_NAME}.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+            <!--                <maxFileSize>100MB</maxFileSize>-->
+            <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_PARAM_PATTERN} %-5level %logger{36} %c%L - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>
+            ${LOG_HOME}/${SERVICE_NAME}/${SERVICE_NAME}_error.log
+        </file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${SERVICE_NAME}/${SERVICE_NAME}.%d{yyyy-MM-dd}_error.log.zip</fileNamePattern>
+            <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+            <!--                <maxFileSize>100MB</maxFileSize>-->
+            <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_PARAM_PATTERN} %-5level %logger{36} %c%L - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="FILE_DB" class="com.asiainfo.mlp.gateway.log.LogDBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>${DB_DRIVER}</driverClass>
+            <url>${DB_URL}</url>
+            <user>${DB_USER}</user>
+            <password>${DB_PASS}</password>
+        </connectionSource>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <appender name="ASYNC_DB" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>100</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="FILE_DB"/>
+    </appender>
+
+    <root level="${LOG_LEVEL_ROOT}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE_ERROR"/>
+    </root>
+
+    <logger name="com.asiainfo.mlp" level="${LOG_LEVEL}" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="FILE_ERROR"/>
+        <appender-ref ref="ASYNC_DB"/>
+    </logger>
+</configuration>

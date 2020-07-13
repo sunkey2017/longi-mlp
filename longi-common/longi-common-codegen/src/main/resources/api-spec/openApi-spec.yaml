@@ -1,0 +1,396 @@
+openapi: 3.0.2
+info:
+  version: 3.0.0.0
+  title: AISWare AI^2 日志管理-API < openapi >
+  description: |
+    日志管理-API定义
+servers:
+  - url: 'http://10.13.16.103:8182/aiSquare/openApi'
+tags:
+  - name: logs
+    description: 日志
+components:
+  schemas:
+    ResEventLog:
+      description: 资源事件日志
+      type: object
+      allOf:
+        - properties:
+            logId:
+              type: string
+              description: 日志编码
+            serviceId:
+              type: string
+              description: 服务id，事件来源
+            resource:
+              type: string
+              description: 资源名称
+            eventType:
+              type: string
+              description: 事件类型
+            tagSource:
+              type: string
+              description: tag来源
+            operater:
+              type: string
+              description: 操作人
+            operateTime:
+              type: string
+              format: date-time
+              description: 操作时间
+            finishTime:
+              type: string
+              format: date-time
+              description: 完成时间
+            timeConsuming:
+              type: string
+              description: 耗时
+            success:
+              type: string
+              description: 是否成功
+            message:
+              type: string
+              description: 操作信息
+    ApiRequestLog:
+      description: Api请求调用日志
+      type: object
+      properties:
+        logId:
+          type: string
+          description: 日志编码
+        apiId:
+          type: string
+          description: API编码
+        clientId:
+          type: string
+          description: 客户端编码
+        serviceId:
+          type: string
+          description: 服务编码
+        userId:
+          type: string
+          description: 用户编码
+        beginAt:
+          type: string
+          description: 开始时间
+        endAt:
+          type: string
+          description: 结束时间
+        operateBy:
+          type: string
+          description: 操作人
+        successFlag:
+          type: integer
+          description: 是否成功
+        outputCode:
+          type: string
+          description: 输出code
+        outputMessage:
+          type: string
+          description: 输出Message
+        addtionalInfo:
+          type: string
+          description: 附加信息
+        timeDiff:
+          type: integer
+          format: int64
+          description: 时间差
+    ApiRequestLogSummary:
+      description: 资源事件日志
+      type: object
+      allOf:
+        - properties:
+            count:
+              type: integer
+              description: 日志条数
+            errorCount:
+              type: integer
+              description: 错误日志条数
+            successCount:
+              type: integer
+              description: 成功日志条数
+            logs:
+              type: array
+              items:
+                $ref: '#/components/schemas/ApiRequestLog'
+    ApiRequestIntervalLog:
+      description: Api请求调用日志
+      type: object
+      properties:
+        queryTime:
+          type: string
+          description: 查询时间
+        count:
+          type: integer
+          description: 调用次数
+        successCount:
+          type: integer
+          description: 成功调用次数
+        errorCount:
+          type: integer
+          description: 错误调用次数
+        successRate:
+          type: number
+          format: double
+          description: 成功调用率
+    LogQueryInterval:
+      type: string
+      enum:
+        - HOUR
+        - DAY
+        - MONTH
+      x-enum-descriptions:
+        - 按小时查询
+        - 按天查询
+        - 按月查询
+      x-enum-varnames:
+        - HOUR
+        - DAY
+        - MONTH
+      description: |
+        模型发布相关文件类型 * HOUR:按小时查询 * DAY:按天查询 * MONTH:按月查询
+    ApiRequestLogDetail:
+      description: Api请求调用日志
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ApiRequestLog'
+        - properties:
+            requestLog:
+              type: string
+              description: 请求日志
+            responseLog:
+              type: string
+              description: 响应日志
+  parameters:
+    domain:
+      name: domain
+      in: path
+      description: 资源编码
+      required: true
+      schema:
+        type: string
+    traceId:
+      name: traceId
+      in: path
+      description: 服务追踪id
+      required: true
+      schema:
+        type: string
+    resId:
+      name: resId
+      in: path
+      description: 资源id
+      required: true
+      schema:
+        type: string
+    subDomain:
+      name: subDomain
+      in: path
+      description: 子资源编码
+      required: true
+      schema:
+        type: string
+    subResId:
+      name: subResId
+      in: path
+      description: 子资源id
+      required: true
+      schema:
+        type: string
+    eventTypes:
+      name: eventTypes
+      in: query
+      description: 事件类型数组
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+    successFlag:
+      name: successFlag
+      in: query
+      description: 是否成功标示
+      schema:
+        type: integer
+    beginAt:
+      name: beginAt
+      in: query
+      description: 开始时间
+      schema:
+        type: string
+    endAt:
+      name: endAt
+      in: query
+      description: 结束时间
+      schema:
+        type: string
+    timeInterval:
+      name: timeInterval
+      in: query
+      description: 日志查询时间间隔，秒为单位
+      schema:
+        type: integer
+    serviceId:
+      name: serviceId
+      in: query
+      description: 服务编号
+      schema:
+        type: string
+    queryIntervalType:
+      name: queryInterval
+      in: query
+      description: 查询时段类型
+      schema:
+        $ref: '#/components/schemas/LogQueryInterval'
+    timePeriod:
+      name: timePeriod
+      in: query
+      description: 时间段
+      schema:
+        type: number
+        format: double
+    logId:
+      name: logId
+      in: path
+      description: 日志编码
+      required: true
+      schema:
+        type: string
+  responses:
+    ResEventLogList:
+      description: 资源事件日志列表
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ResEventLog'
+    ApiRequestLogList:
+      description: 请求日志列表
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiRequestLogSummary'
+    ApiRequestIntervalLogList:
+      description: 阶段性请求日志列表
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ApiRequestIntervalLog'
+    ApiRequestLogDetail:
+      description: API请求日志
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiRequestLogDetail'
+paths:
+  '/{domain}/{traceId}/logs':
+    get:
+      operationId: getResTraceLogs
+      summary: 获取资源下具体操作的操作日志
+      description: |
+        根据事件类型参数，过滤查询资源下具体的操作事件日志
+      tags:
+        - logs
+      parameters:
+        - $ref: '#/components/parameters/domain'
+        - $ref: '#/components/parameters/traceId'
+        - $ref: '#/components/parameters/eventTypes'
+      responses:
+        '200':
+          $ref: '#/components/responses/ResEventLogList'
+  '/{domain}/{resId}/logs':
+    get:
+      operationId: getResLogs
+      summary: 获取资源下的操作日志
+      description: |
+        根据事件类型参数，过滤查询资源下的事件日志
+      tags:
+        - logs
+      parameters:
+        - $ref: '#/components/parameters/domain'
+        - $ref: '#/components/parameters/resId'
+        - $ref: '#/components/parameters/eventTypes'
+      responses:
+        '200':
+          $ref: '#/components/responses/ResEventLogList'
+  '/{domain}/{resId}/{subDomain}/logs':
+    get:
+      operationId: getResSubLogs
+      summary: 获取资源下子资源的操作日志
+      description: |
+        根据事件类型参数，过滤查询资源下子资源的事件日志
+      tags:
+        - logs
+      parameters:
+        - $ref: '#/components/parameters/domain'
+        - $ref: '#/components/parameters/resId'
+        - $ref: '#/components/parameters/subDomain'
+        - $ref: '#/components/parameters/eventTypes'
+      responses:
+        '200':
+          $ref: '#/components/responses/ResEventLogList'
+  '/{domain}/{resId}/{subDomain}/{subResId}/logs':
+    get:
+      operationId: getSubResLogs
+      summary: 获取资源下某一子资源的操作日志
+      description: |
+        根据事件类型参数，过滤查询资源下某一子资源的事件日志
+      tags:
+        - logs
+      parameters:
+        - $ref: '#/components/parameters/domain'
+        - $ref: '#/components/parameters/resId'
+        - $ref: '#/components/parameters/subDomain'
+        - $ref: '#/components/parameters/subResId'
+        - $ref: '#/components/parameters/eventTypes'
+      responses:
+        '200':
+          $ref: '#/components/responses/ResEventLogList'
+  /apis/logs:
+    get:
+      operationId: getRequestLogs
+      summary: 获取api接口请求日志
+      description: |
+        根据参数，过滤查询获取api接口请求日志
+      tags:
+        - requestLogs
+      parameters:
+        - $ref: '#/components/parameters/successFlag'
+        - $ref: '#/components/parameters/beginAt'
+        - $ref: '#/components/parameters/endAt'
+        - $ref: '#/components/parameters/timeInterval'
+        - $ref: '#/components/parameters/serviceId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiRequestLogList'
+  /apis/intervalLogs:
+    get:
+      operationId: getIntervalRequestLogs
+      summary: 片段性获取api接口请求日志
+      description: |
+        根据参数，过滤查询获取api接口请求日志
+      tags:
+        - requestLogs
+      parameters:
+        - $ref: '#/components/parameters/queryIntervalType'
+        - $ref: '#/components/parameters/timePeriod'
+        - $ref: '#/components/parameters/serviceId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiRequestIntervalLogList'
+  '/apis/logs/{logId}':
+    get:
+      operationId: getRequestLogById
+      summary: 根据编号获取api接口请求日志
+      description: |
+        根据编号获取api接口请求日志
+      tags:
+        - requestLogs
+      parameters:
+        - $ref: '#/components/parameters/logId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiRequestLogDetail'

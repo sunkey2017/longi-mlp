@@ -1,0 +1,15 @@
+{{#required}}@NotNull{{/required}}{{#isContainer}}{{^isPrimitiveType}}{{^isEnum}}
+  @Valid{{/isEnum}}{{/isPrimitiveType}}{{/isContainer}}{{^isContainer}}{{^isPrimitiveType}}
+  @Valid{{/isPrimitiveType}}{{/isContainer}}{{#pattern}}
+  @Pattern(regexp="{{{pattern}}}") {{/pattern}}{{#minLength}}{{#maxLength}}
+  @Size(min={{minLength}},max={{maxLength}}) {{/maxLength}}{{/minLength}}{{#minLength}}{{^maxLength}}
+  @Size(min={{minLength}}) {{/maxLength}}{{/minLength}}{{^minLength}}{{#maxLength}}
+  @Size(max={{maxLength}}) {{/maxLength}}{{/minLength}}{{#minItems}}{{#maxItems}}
+  @Size(min={{minItems}},max={{maxItems}}) {{/maxItems}}{{/minItems}}{{#minItems}}{{^maxItems}}
+  @Size(min={{minItems}}) {{/maxItems}}{{/minItems}}{{^minItems}}{{#maxItems}}
+  @Size(max={{maxItems}}) {{/maxItems}}{{/minItems}}{{#useBeanValidation}}{{#isEmail}}{{#java8}}
+  @javax.validation.constraints.Email{{/java8}}{{/isEmail}}{{/useBeanValidation}}{{#performBeanValidation}}{{#isEmail}}{{^java8}}
+  @org.hibernate.validator.constraints.Email{{/java8}}{{/isEmail}}{{/performBeanValidation}}{{#isInteger}}{{#minimum}}
+  @Min({{minimum}}){{/minimum}}{{#maximum}} @Max({{maximum}}) {{/maximum}}{{/isInteger}}{{#isLong}}{{#minimum}}
+  @Min({{minimum}}L){{/minimum}}{{#maximum}} @Max({{maximum}}L) {{/maximum}}{{/isLong}}{{^isInteger}}{{^isLong}}{{#minimum}}
+  @DecimalMin({{#exclusiveMinimum}}value={{/exclusiveMinimum}}"{{minimum}}"{{#exclusiveMinimum}},inclusive=false{{/exclusiveMinimum}}){{/minimum}}{{#maximum}} @DecimalMax({{#exclusiveMinimum}}value={{/exclusiveMinimum}}"{{maximum}}"{{#exclusiveMinimum}},inclusive=false{{/exclusiveMinimum}}) {{/maximum}}{{/isLong}}{{/isInteger}}
