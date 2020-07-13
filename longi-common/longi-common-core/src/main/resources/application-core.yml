@@ -1,0 +1,55 @@
+mlp:
+  platform: ${AI_PLATFORM:LONGI AI² PLATFORM}
+  platform-desc: ${AI_PLATFORM_DESC:LONGI智能运维平台}
+  platform-version: ${AI_PLATFORM_VERSION:1.0.0.0}
+  platform-linkman: ${AI_PLATFORM_LINKMAN:孙珂}
+  platform-link-email: ${AI_PLATFORM_EMAIL:sunke@163.com}
+  log:
+    level.root: ${LOG_LEVEL_ROOT:info}
+    level.ai: ${LOG_LEVEL:debug}
+  config:
+    data-path: ${AI_DATA_PATH:/data/ai_lab/mlp_web}
+    security:
+      jwt-signingKey: jwtmlp
+      jwt-expiration: 0
+logging:
+  config: classpath:logback-${mlp.service}.xml
+  path: ${mlp.config.data-path}/logs
+  level:
+    org.springframework: ${mlp.log.level.root:INFO}
+    com.asiainfo.mdp: ${mlp.log.level.ai:DEBUG}
+    com.asiainfo.mlp: ${mlp.log.level.ai:DEBUG}
+    com.asiainfo.ai: ${mlp.log.level.ai:DEBUG}
+    druid.sql.Statement: ${mlp.log.level.ai:DEBUG}
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://10.13.6.103:3306/mdp_dev_v3?useUnicode=true&useSSL=false&characterEncoding=utf8
+      username: root
+      password: root@123
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 初始化时建立物理连接的个数
+      initial-size: 5
+      # 最小连接池数量
+      min-idle: 5
+      # 最大连接池数量
+      max-active: 10
+      # 获取连接时最大等待时间
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      test-while-idle: true
+      validation-query: select 1
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 监控统计用的filter:stat; 日志用的filter:log4j|slf4j; 防御sql注入的filter:wall
+      filters: stat,slf4j
+      filter:
+        slf4j:
+          enabled: true
+          connection-log-enabled: true
+          statement-log-enabled: false
+          statement-executable-sql-log-enable: false
+mybatis-plus:
+  mapper-locations: classpath:logback-${mlp.service}.xml
