@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -9,15 +9,12 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
     <modules>
-        <module>longi-gateway</module>
         <module>longi-common</module>
-        <module>longi-api</module>
-        <module>longi-service</module>
         <module>longi-mmc</module>
         <module>longi-gateway</module>
         <module>longi-api</module>
         <module>longi-service</module>
-        <module>longi-mmc</module>
+
     </modules>
     <description>隆基LONGI智能平台(提供给珂珂)</description>
     <properties>
@@ -174,24 +171,24 @@
                     </executions>
                 </plugin>
                 <!--<plugin>-->
-                    <!--<groupId>com.spotify</groupId>-->
-                    <!--<artifactId>docker-maven-plugin</artifactId>-->
-                    <!--<version>1.2.0</version>-->
-                    <!--<configuration>-->
-                        <!--<imageName>${docker.registry.url}/${project.name}:${project.version}</imageName>-->
-                        <!--<dockerHost>${docker.url}</dockerHost>-->
-                        <!--<dockerDirectory>${project.basedir}</dockerDirectory>-->
-                        <!--<rm>true</rm>-->
-                        <!--<resources>-->
-                            <!--<resource>-->
-                                <!--<targetPath>/</targetPath>-->
-                                <!--<directory>${project.build.directory}</directory>-->
-                                <!--<include>${project.build.finalName}.jar</include>-->
-                            <!--</resource>-->
-                        <!--</resources>-->
-                        <!--<serverId>docker-hub</serverId>-->
-                        <!--<registryUrl>${docker.registry.url}</registryUrl>-->
-                    <!--</configuration>-->
+                <!--<groupId>com.spotify</groupId>-->
+                <!--<artifactId>docker-maven-plugin</artifactId>-->
+                <!--<version>1.2.0</version>-->
+                <!--<configuration>-->
+                <!--<imageName>${docker.registry.url}/${project.name}:${project.version}</imageName>-->
+                <!--<dockerHost>${docker.url}</dockerHost>-->
+                <!--<dockerDirectory>${project.basedir}</dockerDirectory>-->
+                <!--<rm>true</rm>-->
+                <!--<resources>-->
+                <!--<resource>-->
+                <!--<targetPath>/</targetPath>-->
+                <!--<directory>${project.build.directory}</directory>-->
+                <!--<include>${project.build.finalName}.jar</include>-->
+                <!--</resource>-->
+                <!--</resources>-->
+                <!--<serverId>docker-hub</serverId>-->
+                <!--<registryUrl>${docker.registry.url}</registryUrl>-->
+                <!--</configuration>-->
                 <!--</plugin>-->
             </plugins>
         </pluginManagement>
@@ -267,17 +264,17 @@
         </repository>
     </repositories>
     <!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>ai-nexus-repo-release</id>-->
-            <!--<name>AI Nexus Release Repository</name>-->
-            <!--<url>https://repo.maven.apache.org/maven2</url>-->
-            <!--&lt;!&ndash;<url>http://10.1.241.141:18081/repository/maven-releases/</url>&ndash;&gt;-->
-        <!--</repository>-->
-        <!--<snapshotRepository>-->
-            <!--<id>ai-nexus-repo-snapshots</id>-->
-            <!--<name>AI Nexus Snapshot Repository</name>-->
-            <!--<url>https://repo.maven.apache.org/maven2</url>-->
-            <!--&lt;!&ndash;<url>http://10.1.241.141:18081/repository/maven-snapshots/</url>&ndash;&gt;-->
-        <!--</snapshotRepository>-->
+    <!--<repository>-->
+    <!--<id>ai-nexus-repo-release</id>-->
+    <!--<name>AI Nexus Release Repository</name>-->
+    <!--<url>https://repo.maven.apache.org/maven2</url>-->
+    <!--&lt;!&ndash;<url>http://10.1.241.141:18081/repository/maven-releases/</url>&ndash;&gt;-->
+    <!--</repository>-->
+    <!--<snapshotRepository>-->
+    <!--<id>ai-nexus-repo-snapshots</id>-->
+    <!--<name>AI Nexus Snapshot Repository</name>-->
+    <!--<url>https://repo.maven.apache.org/maven2</url>-->
+    <!--&lt;!&ndash;<url>http://10.1.241.141:18081/repository/maven-snapshots/</url>&ndash;&gt;-->
+    <!--</snapshotRepository>-->
     <!--</distributionManagement>-->
 </project>

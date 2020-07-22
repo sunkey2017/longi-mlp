@@ -33,7 +33,7 @@ public class GateWaySecurity {
                 .httpBasic().disable()
                 .logout().disable()
                 .authorizeExchange()
-                .pathMatchers().permitAll()
+                .pathMatchers("/authApi/**").permitAll()
                 .anyExchange().authenticated()
                 .and()
                 .addFilterAt(new AuthcFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
